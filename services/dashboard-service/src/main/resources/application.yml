@@ -1,0 +1,35 @@
+server:
+  port: ${SERVER_PORT:8083}
+
+spring:
+  application:
+    name: dashboard-service
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:watcher}
+    username: ${POSTGRES_USER:watcher}
+    password: ${POSTGRES_PASSWORD:watcher}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+  kafka:
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:29092}
+    consumer:
+      group-id: ${SPRING_KAFKA_CONSUMER_GROUP:dashboard-live-tail}
+      auto-offset-reset: latest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  redis:
+    host: ${SPRING_REDIS_HOST:localhost}
+    port: ${SPRING_REDIS_PORT:6379}
+
+watcher:
+  dashboard:
+    live-topic: ${WATCHER_LIVE_TOPIC:raw_logs}
+    cache-ttl-seconds: ${WATCHER_DASHBOARD_CACHE_TTL_SECONDS:300}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics

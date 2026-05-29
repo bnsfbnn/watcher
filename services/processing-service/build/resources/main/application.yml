@@ -1,0 +1,40 @@
+server:
+  port: ${SERVER_PORT:8081}
+
+spring:
+  application:
+    name: processing-service
+  kafka:
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:29092}
+    consumer:
+      group-id: ${SPRING_KAFKA_CONSUMER_GROUP:processing-service}
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  elasticsearch:
+    rest:
+      uris: ${SPRING_ELASTICSEARCH_URIS:http://localhost:9200}
+  redis:
+    host: ${SPRING_REDIS_HOST:localhost}
+    port: ${SPRING_REDIS_PORT:6379}
+  rabbitmq:
+    host: ${SPRING_RABBITMQ_HOST:localhost}
+    port: ${SPRING_RABBITMQ_PORT:5672}
+    username: ${SPRING_RABBITMQ_USERNAME:guest}
+    password: ${SPRING_RABBITMQ_PASSWORD:guest}
+
+watcher:
+  processing:
+    raw-topic: ${WATCHER_RAW_TOPIC:raw_logs}
+    drop-debug: ${WATCHER_DROP_DEBUG:true}
+    error-alert-threshold: ${WATCHER_ALERT_ERROR_THRESHOLD:100}
+    counter-ttl-seconds: ${WATCHER_COUNTER_TTL_SECONDS:180}
+    alert-exchange: ${WATCHER_ALERT_EXCHANGE:alerts_exchange}
+    alert-queue: ${WATCHER_ALERT_QUEUE:alerts_queue}
+    alert-routing-key: ${WATCHER_ALERT_ROUTING_KEY:error_routing_key}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics

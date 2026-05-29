@@ -1,0 +1,15 @@
+server:
+  port: ${SERVER_PORT:8082}
+
+spring:
+  application:
+    name: query-service
+  elasticsearch:
+    rest:
+      uris: ${SPRING_ELASTICSEARCH_URIS:http://localhost:9200}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics

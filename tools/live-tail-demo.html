@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Watcher Live Tail Demo</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #111827;
+      color: #e5e7eb;
+    }
+    header {
+      padding: 16px 20px;
+      border-bottom: 1px solid #374151;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    main {
+      padding: 20px;
+    }
+    #status {
+      font-size: 13px;
+      color: #93c5fd;
+    }
+    #logs {
+      white-space: pre-wrap;
+      background: #030712;
+      border: 1px solid #374151;
+      border-radius: 6px;
+      padding: 16px;
+      min-height: 420px;
+      overflow: auto;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1>Watcher Live Tail</h1>
+  <span id="status">connecting...</span>
+</header>
+<main>
+  <div id="logs"></div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+<script>
+  const statusEl = document.getElementById('status');
+  const logsEl = document.getElementById('logs');
+  const socket = new SockJS('http://localhost:8088/ws/live-tail');
+  const stomp = Stomp.over(socket);
+  stomp.debug = null;
+
+  stomp.connect({}, () => {
+    statusEl.textContent = 'connected';
+    stomp.subscribe('/topic/logs', (message) => {
+      const line = `[${new Date().toISOString()}] ${message.body}\n`;
+      logsEl.textContent = line + logsEl.textContent;
+    });
+  }, (error) => {
+    statusEl.textContent = 'disconnected';
+    logsEl.textContent = `WebSocket error: ${error}\n` + logsEl.textContent;
+  });
+</script>
+</body>
+</html>

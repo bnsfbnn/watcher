@@ -1,0 +1,15 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+    }
+}
+
+rootProject.name = 'watcher'
+
+include 'shared:log-contracts'
+include 'services:ingestion-service'
+include 'services:processing-service'
+include 'services:query-service'
+include 'services:dashboard-service'
+include 'services:alerting-service'

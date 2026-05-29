@@ -1,0 +1,25 @@
+server:
+  port: ${SERVER_PORT:8084}
+
+spring:
+  application:
+    name: alerting-service
+  rabbitmq:
+    host: ${SPRING_RABBITMQ_HOST:localhost}
+    port: ${SPRING_RABBITMQ_PORT:5672}
+    username: ${SPRING_RABBITMQ_USERNAME:guest}
+    password: ${SPRING_RABBITMQ_PASSWORD:guest}
+
+watcher:
+  alerting:
+    exchange: ${WATCHER_ALERT_EXCHANGE:alerts_exchange}
+    queue: ${WATCHER_ALERT_QUEUE:alerts_queue}
+    routing-key: ${WATCHER_ALERT_ROUTING_KEY:error_routing_key}
+    slack-webhook-url: ${WATCHER_SLACK_WEBHOOK_URL:}
+    email-sink: ${WATCHER_EMAIL_SINK:console}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics

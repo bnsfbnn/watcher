@@ -1,0 +1,52 @@
+plugins {
+    id 'org.springframework.boot' version '2.7.18' apply false
+    id 'io.spring.dependency-management' version '1.1.4' apply false
+}
+
+allprojects {
+    group = 'com.codex.watcher'
+    version = '0.1.0-SNAPSHOT'
+
+    repositories {
+        mavenCentral()
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+    }
+
+    tasks.withType(Test) {
+        useJUnitPlatform()
+    }
+}
+
+def springBootServices = [
+        ':services:ingestion-service',
+        ':services:processing-service',
+        ':services:query-service',
+        ':services:dashboard-service',
+        ':services:alerting-service'
+]
+
+configure(springBootServices.collect { project(it) }) {
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-actuator'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    }
+}
+
+project(':shared:log-contracts') {
+    dependencies {
+        implementation 'com.fasterxml.jackson.core:jackson-annotations:2.13.5'
+    }
+}
